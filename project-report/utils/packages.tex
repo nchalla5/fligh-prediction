@@ -1,0 +1,94 @@
+\usepackage{xspace}
+%\usepackage{syntax}
+\usepackage{listings}
+\usepackage{xcolor}
+%\usepackage{multirow}
+\usepackage{array}
+%\usepackage{extpfeil}
+%\usepackage{pifont}
+%\usepackage{hyperref}
+%\usepackage{verbatim}
+%\usepackage{lscape}
+\usepackage{graphicx}
+%\usepackage{longtable}
+\usepackage{amsmath}
+\let\Bbbk\relax
+\usepackage{amssymb}
+\let\Bbbk\relax
+\usepackage{subcaption}
+%\usepackage{booktabs}
+%\usepackage{float}
+% \usepackage{dblfloatfix}
+%\usepackage{stfloats}
+%\usepackage{paralist}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{cite}
+%\usepackage{minted}
+%\usepackage{go}
+\usepackage{tabularx}
+\usepackage{tikz}
+
+%%% Keeping all the enumitem package stuff together
+\let\labelindent\relax
+ \usepackage{enumitem}
+% \setlist[enumerate]{itemsep=0pt,topsep=0pt,parsep=0pt,partopsep=0pt}
+% \setlist[itemize]{itemsep=1pt,topsep=2pt,parsep=0pt,partopsep=0pt}
+% \setlist[description]{itemsep=0pt,topsep=0pt,parsep=0pt,partopsep=0pt}
+% \setlength{\leftmargin}{20pt}
+
+
+%%% Environments
+\newtheorem{lemma}{Technical Problem Definition}
+\newtheorem{example}{Example}
+\newtheorem{definition}{Definition}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{TAPstyle}{
+	backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=false,                 
+%    numbers=left,                    
+    numbersep=0pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    xleftmargin=5pt,
+    xrightmargin=5pt,
+%    belowcaptionskip=0.1\baselineskip,
+	morekeywords={rule,when,Item,received,then,end}
+}
+\lstset{style=TAPstyle}
+%% Initialize counters for Appendix
+%\renewcommand\appendix{\par
+%	\setcounter{section}{0}
+%	\setcounter{subsection}{0}
+%	\setcounter{figure}{0}
+%	\setcounter{table}{0}
+%	\setcounter{lstlisting}{0}
+%%	\setcounter{algorithm}{0}
+%	\renewcommand\thesection{\Alph{section}}
+%	\renewcommand\thefigure{\Alph{section}\arabic{figure}}
+%	\renewcommand\thetable{\Alph{section}\arabic{table}}
+%	\renewcommand\thelstlisting{\Alph{section}\arabic{lstlisting}}
+%%	\renewcommand\thealgorithm{\Alph{section}\arabic{algorithm}}
+%}
+%
+
+
+% Package for strikethrough text
+%\usepackage[normalem]{ulem}
+%\newcommand{\cutme}[1]{{\color{blue}{\sout{#1}}}}
+%\newcommand{\newtext}[1]{{\textcolor{magenta} {#1}}}
+%\newcommand{\replace}[2]{\cutme{#1}{\xspace\newtext{#2\xspace}}}

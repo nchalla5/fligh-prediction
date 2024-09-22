@@ -1,0 +1,143 @@
+%!TEX root=../main.tex
+%\vspace{-0.2in}
+\section{IoTGuard Re-Implementation}
+%In this section, we will provide additional information about re-implementation of \iotguard \cite{iotguard2019ndss}.
+
+\iotguard is a defense mechanism built to protect IoT system from malicious IoT applications and unintended interactions among apparently benign IoT applications. To ensure safety and security, \iotguard enforces policies on IoT applications at runtime (during the execution of IoT applications).
+
+Policy enforcement mechanism of \iotguard is built on three main modules: Code Instrumentor, Data Collector, and Security Service.
+%Among these modules only implementation of code instrumentor module is publicly available. % on github \cite{?}.
+To the best of our knowledge, implementations of data collector and security service are not publicly available.
+Among those three modules of \iotguard only implementation of code instrumentor is publicly available but code instrumentor is a platform specific module.
+Original developers of IoTGuard built a code instrumentor for \smt platform.
+Since \sysname is developed for \oh, we could not reuse the publicly available code instrumentor of \iotguard.
+As a result, we had to re-implement all modules of \iotguard for \oh from the scratch.
+
+The purpose of code instrumentor module of \iotguard is to deploy hooks in an IoT application so that at runtime
+(before any action is taken by the IoT application)
+\iotguard's data collector can collect data and invoke security service to verify safety and security of taking an action.
+Code instrumentor must be optimized so that if any application issues multiple actions in the same context, one common hook is deployed for all actions.
+In our implementation of the code instrumentor, we implemented a parser that parses an IoT application of \oh platform and put those policy enforcing hooks before the action statement of the application.
+Our parser ensures the optimized behavior of code instrumentor mentioned earlier.
+%The output of the code instrumentor is the instrumented IoT applications.
+
+%If any application issues multiple actions in the same context, one common hook is deployed for all actions.
+%This optimization of using a common hook for multiple actions issued by an IoT application in the same context mentioned in the \iotguard paper.
+%all applications communicate with \iotguard server before taking any action.
+%To implement code instrumentor module of \iotguard for \oh, we implemented a parser that  vanilla IoT applications
+%(IoT applications for \oh platform are called rules) 
+%and generates instrumented IoT applications.
+
+%Instrumented IoT applications implements a policy check before taking any action. If multiple actions are taken 
+
+Data collector of \iotguard collects data (smart home events and actions) from instrumented IoT applications at runtime and stores the data in a dynamic model consists of states and transitions.
+Each state represents an attribute of a device. Each transition from one state to another state represents the condition on which the state change has occurred. 
+At a program level, a dynamic model is essentially a mutable directed graph where graph nodes are states and graph edges are transitions.
+For example, consider an IoT app named light-control: ``\code{when motion-active after sunset, turn on light.}``
+Upon receiving data from the instrumented \verb*|light-control| app data collector will create a dynamic model which has an event node \verb*|motion=ACTIVE|, an action node \verb*|Light=ON| and an edge with the condition ``\verb*|after| \verb*|sunset|''.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[c]{0.35\linewidth}
+%		\centering
+		\includegraphics[width=\textwidth]{\FIGLOC/drm1.pdf}
+%		\caption{\code{light-control}}
+%		\vspace*{0.2in}
+		\label{fig:light-app}
+	\end{subfigure}
+	\begin{subfigure}[c]{0.6\linewidth}
+%		\centering
+		\includegraphics[width=\textwidth]{\FIGLOC/drm2.pdf}
+%		\vspace*{-0.2in}	
+%		\caption{\code{heat-on}}
+		\label{fig:combined-model}
+	\end{subfigure}
+	\vspace{-0.3in}
+	\caption{ Dynamic model of a distinct IoT app and unified dynamic model of interacting IoT apps}
+	\label{fig:dynamic-model}
+\end{figure}
+If multiple applications interact with each other, data collector will create a unified dynamic model.
+For example: if \verb*|Light=ON| event from \verb*|light-control| app triggers \verb*|heat-on| app: ``\code{Turn on the heater and crockpot when light is on.}'', dynamic models of \verb*|light-control| app and \verb*|heat-on| app will be merged to generate a unified dynamic model. Dynamic model generated from mentioned IoT apps are presented in \FIGREF \ref{fig:dynamic-model}. In our implementation, we developed data collector module of \iotguard on top of python's Networkx library and we ensured our implementation has all the features of data collector module mentioned in the \iotguard paper.
+
+%\section*{Policy Enforcement of IoTGuard}
+Security service module of \iotguard reads safety and security policies, enforces those policies on the dynamic models generated by the data collector, and conveys the result of policy enforcement to the instrumented IoT application.
+After processing (event, action) data received form the instrumented IoT application, data collector of \iotguard will add the corresponding nodes in the dynamic model and invoke security service to enforce policy on the dynamic model.
+\iotguard supports three types of policies: General Policies, Application Specific Policies, Trigger-Action Specific Policies.
+General policies are enforced directly on the dynamic model by applying the graph algorithms.
+For example: A general policy mentioned in the \iotguard paper \cite{iotguard2019ndss}:
+``\code{G3: An event handler of an app must not change a device attribute to a value which is used as an event in the event handler of  another app, e.g., door-lock event handler must not turn on a switch which is used in an event handler of an app that locks the door.}''
+To enforce the policy \code{G3}, security service checked whether any dynamic model has a loop in it.
+If there exists a loop in the dynamic model, security service module will deny the action by sending a deny response to the instrumented IoT app.
+
+Application specific policies are written in a specific policy language mentioned in the \iotguard paper \cite{iotguard2019ndss}.
+We implemented a policy parser to read policies written in \iotguard's policy language. To enforce application specific policy, our implementation of security service followed the description mentioned in \iotguard paper. % policy enforcement algorithm.
+Each of the application specific policy is essentially a logical implication.
+Hence, each policy has a premise condition and a conclusion condition.
+A condition (premise/conclusion) is essentially a node in the dynamic model.
+To enforce an application specific policy, security service tries to find a path(from the premise condition of the policy to the conclusion condition of the policy) in the dynamic model.
+If there is a path in the dynamic model that matches with the corresponding path of a policy and if it is a ``deny'' policy, security service decides a policy is violated.
+After the decision, security service removes the nodes that were added earlier by the data collector and it returns a deny response to the instrumented IoT application.
+
+%In case of application specific policy, we were able to enforce only ``deny'' policy.
+%In short, what we do is check if there is a path from the pre
+%Although \iotguard's paper does not mention a specific policy enforcement algorithm, we crafted this policy enforcement algorithm from description of the paper.
+%\input{\ALGOLOC/iotguardPolicyEnforcement}
+
+To enforce trigger-action specific policy, we marked each of the physical device of the IoT testbed as Trusted and Secure and all virtual triggers (such as EmailSent, GoogleAssistantActivated) as Untrusted and Insecure. When enforcing trigger-action specific policy, security service will try to find a path from an untrusted(insecure) node to a trusted(secure) node.
+After adding new nodes in the dynamic model, if there exists a path from untrusted node to a trusted node or a path from an insecure node to a secure node, security service will deny the actions and remove the corresponding nodes.
+
+
+
+
+% a brief overview about the IoT defenses.
+%Our goal to inform the reader about how policy enforcing IoT defenses ensures safety and security of IoT systems.
+%Dynamic policy enforcing IoT defenses such as \expat, \patriot, and \iotguard enforces policy during execution of IoT applications.
+%These IoT defenses consists of two primary components: Policy Enforcement Point (PEP) and Policy Decision Point(PDP). 
+%Their policy enforcement mechanism works by interaction between the two components: Policy Enforcement Point and Policy Decision Point.
+%For policy enforcement, all three of the IoT defenses rely on instrumenting IoT applications.
+
+%PEP of all three IoT defenses works in a similar manner: by including necessary instructions to the source code of IoT applications.
+%The process of including additional instructions is called instrumentation.
+%By instrumenting IoT applications, IoT defenses guards actions of IoT applications with an \textbf{if} block, predicated on a function call to Policy Decision Point(PDP).
+%With the function call to PDP, IoT application sends runtime information to PDP.
+%This runtime information essentially include the context of the action being taken by the IoT application.
+%
+%PDP of IoT defense is responsible for making a decision about the impending action.
+%IoT defenses make this decision based on user provided safety and security policies.
+%User provides expected behavior of the system in the form of safety and security policy.
+%Each of the IoT defense provides a policy language to help user in that process.
+%PDP of IoT defense parse those policies and make a decision(allow/deny) about the impending action based on the policy semantics.
+%
+%Primary difference among these three IoT defenses(\expat, \patriot, and \iotguard) lies on the implementation of the policy decision component called PDP.
+%PDP of \expat and \patriot is implemented on the instrumented IoT applications.
+%As a result, instrumented applications in \expat and \patriot contains both PEP and PDP module.
+%On the contrary, PDP of \iotguard is implemented on a local server as a separate component of the smart home system.
+%PEP of \iotguard communicates with PDP of \iotguard through http requests.
+%
+%PDP of \expat and \patriot uses formal logic to reach a policy decision(allow/deny) about an impending action.
+%%Both \expat and \patriot converts the policy to a logical expression and evaluates the logical expression to reach a policy decision.
+%%\expat converts it's policy to QF-FOL.
+%Upon receiving information about the impending action, \expat executes this action to reach a hypothetical system state.
+%Then \expat validates that the hypothetical state is compliant with all policies.
+%If the hypothetical system state is compliant with all policies, PDP of \expat reaches the decision to allow the action.
+%For the opposite case, It denies the action.
+%
+%Upon receiving information about an impending action, \patriot checks whether impending action and the current system state is compliant with all policies.
+%%\patriot converts it's policy to QF-MTL formula.
+%%If impending action and the current system state is compliant, \patriot will allow the action to execute in real life.
+%If the result of the compliance checking is true, PDP of \patriot will return allow response.
+%Otherwise, it will return deny response. 
+%
+%PDP of \iotguard uses a different approach.
+%Upon receiving events and actions from IoT applications, \iotguard's PDP creates a directed graph from those events and actions.
+%%\iotguard's PDP maintains a directed graph which models the IoT applications.
+%This graph is called dynamic rule model(DRM).
+%PDP of \iotguard then does reachability analysis on the DRM to make a policy decision.
+%%Each policy in \iotguard can be considered a path in the directed graph called DRM.
+%Each policy in \iotguard essentially describes whether a path in the DRM is allowed or not.
+%If PDP of \iotguard finds a path in the DRM, that is not allowed, it will send a deny response to PEP of \iotguard.
+%For all other cases, PDP of \iotguard will return allow response.
+
+%PDP of \iotguard tries to match the paths of relevant policies with paths in the DRM.
+%Whenever, path of a policy matches with a path of DRM, PDP of \iotguard takes the policy decision according that matching policy.
+%If the policy allows such a path in DRM, it will 

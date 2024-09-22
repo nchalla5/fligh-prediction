@@ -1,0 +1,154 @@
+%!TEX root = ../main.tex
+
+%\renewcommand{\ttdefault}{txtt}
+
+\usepackage[T1,OT1]{fontenc}
+
+\renewcommand{\ttdefault}{cmtt}
+
+
+%% COMMON MARCOs
+\newcommand{\etal}{\textit{et al.}\xspace}
+\newcommand{\ie}{\textit{i.e.}\xspace}
+\newcommand{\eg}{\textit{e.g.}\xspace}
+\newcommand{\etc}{\textit{etc.}\xspace}
+%\newcommand{\todo}[1]{\vspace*{0.05in}\noindent\textcolor{red}{\textbf{Todo}}\textcolor{blue}{: #1.}\xspace}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{Todo}}\textcolor{blue}{: #1.}\xspace}
+
+
+\newcommand{\mypara}[1]{\noindent\textbf{#1}\xspace}
+\newcommand{\says}[2]{\noindent\textcolor{orange}{\textbf{#1 says: }}\textcolor{blue}{#2.}\xspace}
+\newcommand{\code}[1]{{\texttt{#1}}\xspace}
+\newcommand{\msg}[1]{{\texttt{#1}}\xspace}
+\newcommand{\pred}[1]{{\textsf{#1}}\xspace}
+\newcommand{\mycomment}[1]{}
+\newcommand{\FIGREF}{Figure\xspace}
+\newcommand{\FIGLOC}{pics}
+\newcommand{\TABLOC}{tables}
+\newcommand{\ALGOLOC}{algorithms}
+
+%algorithmic commands
+\renewcommand{\algorithmiccomment}[1]{/*~\code{#1}~*/ }
+
+%% Paper specific Macros
+\newcommand{\confinv}{conflicting invariants\xspace}
+\newcommand{\oh}{OpenHAB\xspace}
+\newcommand{\smt}{SmartThings\xspace}
+\newcommand{\ifttt}{IFTTT\xspace}
+\newcommand{\insitu}{\textit{in situ}\xspace}
+\newcommand{\expat}{{\texttt{{ExPAT}}}\xspace}
+\newcommand{\iotguard}{{\texttt{{IoTGuard}}}\xspace}
+%\newcommand{\patriot}{{\textsf{\textsc{Umpire}}}\xspace}
+\newcommand{\patriot}{{\texttt{{PatrIoT}}}\xspace}
+%\newcommand{\approach}{{\texttt{\textsc{Maverick}}}\xspace}
+\newcommand{\helion}{{H$\epsilon$lion}\xspace}
+\newcommand{\sysname}{{{\textsc{VetIoT}}}\xspace}
+\newcommand{\sysnameFull}{XXXXXYYYYZZZZ}
+\newcommand{\violationCount}{PolicyViolationCount}
+\newcommand{\indeterminate}{IndeterminateCount}
+
+\newcommand{\rms}{\texttt{\textsc{DEP}}}
+\newcommand{\restapi}{\texttt{\textsc{REST-API}}\xspace}
+
+\newcommand*\numcircledtikz[1]{\tikz[baseline=(char.base)]{
+		\node[shape=circle,draw,fill, text=white, inner sep=0pt] (char) {#1};}
+} 
+
+%\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+%		\node[shape=circle,fill,inner sep=0.5pt] (char) {\bfseries\footnotesize\textcolor{white}{#1}};}}
+%	
+%\newcommand*\circledGray[1]{\tikz[baseline=(char.base)]{
+%		\node[shape=circle, fill=gray!80, inner sep=0.5pt] (char) {\bfseries\footnotesize\textcolor{black}{#1}};}}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+		\node[shape=circle,fill,inner sep=0.5pt] (char) {\bfseries\normalsize\textcolor{white}{#1}};}}
+	
+\newcommand*\circledGray[1]{\tikz[baseline=(char.base)]{
+		\node[shape=circle, fill=gray!80, inner sep=0.5pt] (char) {\bfseries\normalsize\textcolor{black}{#1}};}}
+
+
+%% System specific macros
+%\newcommand{\iotsystem}{\ensuremath{\mathcal{I}}\xspace}
+%\newcommand{\states}{\ensuremath{\mathcal{S}}\xspace}
+%\newcommand{\rules}{\ensuremath{\mathcal{R}}\xspace}
+%\newcommand{\action}{\ensuremath{\mathcal{A}}\xspace}
+%\newcommand{\variable}{\ensuremath{\mathcal{V}}\xspace}
+%\newcommand{\transition}{\ensuremath{\mathcal{T}}\xspace}
+
+%\newcommand{\policy}{\ensuremath{\Psi}\xspace}
+
+%%% Notations
+\newcommand{\iotsystem}{\ensuremath{\mathbb{I}}\xspace}
+\newcommand{\States}{\ensuremath{\mathcal{S}}\xspace}
+\newcommand{\Actions}{\ensuremath{\mathcal{A}}\xspace}
+\newcommand{\Vars}{\ensuremath{\mathcal{V}}\xspace}
+\newcommand{\Updates}{\ensuremath{\Lambda}\xspace}
+\newcommand{\update}{\ensuremath{\lambda}\xspace}
+\newcommand{\Rules}{\ensuremath{\mathcal{R}}\xspace}
+\newcommand{\Transitions}{\ensuremath{\mathcal{T}}\xspace}
+\newcommand{\Events}{\ensuremath{\mathcal{E}}\xspace}
+\newcommand{\Conds}{\ensuremath{\mathcal{C}}\xspace}
+\newcommand{\domain}{\ensuremath{\mathcal{D}}\xspace}
+\newcommand{\device}{\ensuremath{\theta}\xspace}
+
+\newcommand{\Policies}{\ensuremath{{\Psi}}\xspace}
+\newcommand{\Policy}{\ensuremath{{\psi}}\xspace}
+%\newcommand{\Logic}{\ensuremath{{\Xi}}\xspace}
+\newcommand{\Mapper}{\ensuremath{{\aleph}}\xspace}
+
+\newcommand{\decisionFunction}{\ensuremath{{\Delta}}\xspace}
+
+\newcommand{\TDS}{\ensuremath{\mathbb{T}}\xspace}
+\newcommand{\TB}{\ensuremath{\Omega}\xspace}
+\newcommand{\TSc}{\ensuremath{\Gamma}\xspace}
+\newcommand{\EventSeq}{\ensuremath{\zeta}\xspace}
+
+\newcommand{\Oracle}{\ensuremath{\upsilon}\xspace}
+
+\newcommand{\success}{\texttt{success}\xspace}
+\newcommand{\failure}{\texttt{failure}\xspace}
+
+\newcommand{\degree}{\ensuremath{^\circ}\xspace}
+
+
+
+%=============================================================
+
+%\newcommand{\plang}{\textsc{UPL}\xspace}
+
+\newcommand{\ang}[1]{\ensuremath{#1}}
+
+
+
+\newcommand{\since}[1]{\ensuremath{\mathcal{S}_{#1}}\xspace}
+
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+%\renewcommand{\todo}[2]{\textcolor{red}{\textbf{#1: }}\textcolor{blue}{\textit{#2}}\xspace}
+
+\newcommand{\gap}{\textcolor{red}{\textbf{GAP}}\xspace}
+\newcommand{\cgap}{\textcolor{red}{\textbf{[CITATION NEEDED]}}\xspace}
+
+\newcommand{\ISSP}{\ensuremath{\mathtt{ISSP}}\xspace}
+\newcommand{\cmd}[1]{\ensuremath{\mathsf{#1}}\xspace}
+
+
+
+
+%%%----- Redefine Appendix sections
+\renewcommand\appendix{\par
+	\setcounter{section}{0}
+	\setcounter{subsection}{0}
+	\setcounter{figure}{0}
+	\setcounter{table}{0}
+	\setcounter{lstlisting}{0}
+	\renewcommand\thesection{Appendix \Alph{section}}
+	\renewcommand\thefigure{\Alph{section}\arabic{figure}}
+	\renewcommand\thetable{\Alph{section}\arabic{table}}
+	\renewcommand\thelstlisting{\Alph{section}\arabic{lstlisting}}
+	% Redefine hyperlinks for sections and subsections
+	
+%	% SAYS{MAHMUDUL}{I am getting some error that I cannot figure out if I keep the following two lines!}
+%	\renewcommand\theHsection{\thesection}
+%	\renewcommand\theHsubsection{\thesubsection}
+}
